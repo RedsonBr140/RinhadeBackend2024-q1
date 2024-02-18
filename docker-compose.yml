@@ -1,0 +1,37 @@
+version: "3.5"
+
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.15"
+          memory: "10MB"
+  
+  db:
+    image: postgres:latest
+    hostname: db
+    environment:
+      - POSTGRES_USER=rinha
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=rinha
+    ports:
+      - "5432:5432"
+    volumes: 
+      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: postgres -c checkpoint_timeout=600 -c max_wal_size=4096 -c synchronous_commit=0 -c full_page_writes=0
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "140MB"
+
+networks:
+  default:
+    driver: bridge
+    name: rinha-nginx-2024q1
