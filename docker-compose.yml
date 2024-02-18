@@ -4,6 +4,7 @@ services:
   api01: &api
     image: ghcr.io/redsonbr140/rinhadebackend2024-q1:latest
     hostname: api01
+    restart: unless-stopped
     environment:
       - DATABASE_URL=postgres://rinha:1234@db:5432/rinha
       - PORT=3000
